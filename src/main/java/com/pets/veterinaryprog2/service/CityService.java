@@ -11,12 +11,12 @@ import java.util.List;
 
 @Service
 @Data
-public class VeterinaryService {
+public class CityService {
     private List<Vet> vets;
     private List<City> cities;
     private List<Vaccine> vaccines;
 
-    public VeterinaryService() {
+    public CityService() {
         //Conecto a la base de datos y cargo las ciudades y veterinarios
         cities = new ArrayList<>();
         cities.add(new City("16917001", "Manizales"));
@@ -60,6 +60,38 @@ public class VeterinaryService {
             }
         }
         return citiesFound;
+    }
+
+    public String addCity(City city) throws VeterinaryException{
+        //verificar si existe
+        if(this.verifyCityExist(city)){
+            throw new VeterinaryException("El código ingresado ya existe");
+        }
+        else{
+            this.cities.add(city);
+
+        }
+        return "Ciudad adicionada correctamente";
+    }
+
+    private boolean verifyCityExist(City city){
+        for(City cityAct: this.cities){
+            if(city.getCode().equals(cityAct.getCode())){
+                return true;
+            }
+        }
+        return false;
+    }
+
+    public String updateCity(String code, City city) throws VeterinaryException{
+        for(City cityAct : this.cities){
+            if(cityAct.getCode().equals(code)){
+                cityAct.setDescription(city.getDescription());
+                return "Ciudad actualizada correctamente";
+            }
+        }
+        throw new VeterinaryException("El código ingresado no existe");
+
     }
 
 }
